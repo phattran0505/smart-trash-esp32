@@ -6,4 +6,4 @@ void setup() {
 
 void loop() {
   smartTrashUpdate();
-}
+  }

@@ -1,13 +1,12 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// Blynk configuration - Must be defined before any Blynk includes
+ 
 #define BLYNK_PRINT Serial
 #define BLYNK_TEMPLATE_ID "TMPL6myBfv59F"
 #define BLYNK_TEMPLATE_NAME "smart trash pin"
 #define BLYNK_AUTH_TOKEN "sjJmhHtVmAkNZiv1NNnEGXULecOTq-5T"
 
-#include <Arduino.h>
 
 // WiFi and MQTT configuration
 extern const char *ssid;

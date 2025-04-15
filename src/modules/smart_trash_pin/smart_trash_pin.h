@@ -9,7 +9,6 @@
 #include <WiFiClientSecure.h>
 #include <ArduinoJson.h>
 #include <PubSubClient.h>
-// #include <BlynkSimpleEsp32.h>
 
 // Function declarations
 void smartTrashInit();

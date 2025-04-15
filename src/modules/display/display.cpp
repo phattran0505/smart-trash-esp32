@@ -9,7 +9,36 @@ void initDisplay() {
   
   // Use pre-defined calibration data instead of calibrating each time
   uint16_t calData[5] = {339, 3407, 269, 3451, 7};
+
   tft.setTouch(calData);
+  
+  // Skip calibration and go directly to WiFi connection screen
+}
+
+// Hiệu chỉnh cảm ứng
+void touch_calibrate() {
+  tft.fillScreen(TFT_BLACK);
+  tft.setCursor(20, 0);
+  tft.setTextFont(2);
+  tft.setTextSize(1);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+
+  tft.println("Touch corners as indicated");
+  
+  uint16_t calData[5];
+  tft.calibrateTouch(calData, TFT_RED, TFT_BLACK, 15);
+
+  Serial.println("Calibration complete! Copy these calibration values:");
+  Serial.print("{ ");
+  for (uint8_t i = 0; i < 5; i++) {
+    Serial.print(calData[i]);
+    if (i < 4) Serial.print(", ");
+  }
+  Serial.println(" }");
+  
+  tft.setTouch(calData);
+  
+  delay(1000);
 }
 
 // Hiệu ứng chuyển màn hình - Wipe transition
@@ -179,7 +208,7 @@ void showConnectingMessage() {
   // Logo or title
   tft.setTextSize(2);
   tft.setTextDatum(MC_DATUM);
-  tft.drawString("SMART TRASH SYSTEM", tft.width()/2, 50);
+  tft.drawString("SMART TRASH PIN SYSTEM", tft.width()/2, 50);
   
   // Connecting message
   tft.setTextSize(1);

@@ -3,6 +3,7 @@
 #include "../display/display.h"
 #include "../servo_control/servo_control.h"
 #include "../connectivity/connectivity.h"
+#include "../blynk_control/blynk_control.h"
 
 // Initialize components
 TFT_eSPI tft = TFT_eSPI();
@@ -20,50 +21,69 @@ unsigned long servo3ActivationTime = 0;
 unsigned long lastButtonPressTime = 0;
 bool mqttConnected = false;
 
+// Debug variables
+unsigned long lastTouchDebug = 0;
+
 // Last update times for various operations
 unsigned long lastReconnectAttempt = 0;
 
-void smartTrashInit() {
+void smartTrashInit()
+{
   Serial.begin(115200);
   Serial.println("Starting Smart Trash System...");
-  
+
   // Initialize display
   initDisplay();
-  
-  // Show connecting message
+
+  // Show connecting message immediately
   showConnectingMessage();
 
   // Initialize WiFi and MQTT
   initConnectivity();
-  
+
+  // Initialize Blynk if WiFi is connected
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    initBlynk();
+  }
+
   // Initialize servos
   Serial.println("Initializing servos...");
   initServos();
 
   // Always draw the main interface
   refreshScreen();
-  
+
   Serial.println("Setup completed!");
 }
 
-void smartTrashUpdate() {
+void smartTrashUpdate()
+{
   unsigned long currentTime = millis();
-  
+
   // Check and maintain connectivity
   updateConnectivity();
-  
+
+  // Update Blynk if WiFi is connected
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    updateBlynk();
+  }
+
   // Update servo positions
   updateServos();
-  
+
   // Handle touch input
   uint16_t x, y;
-  if (tft.getTouch(&x, &y)) {
-    if (currentTime - lastButtonPressTime < DEBOUNCE_DELAY) {
+  if (tft.getTouch(&x, &y))
+  {
+    if (currentTime - lastButtonPressTime < DEBOUNCE_DELAY)
+    {
       return;
     }
     
     lastButtonPressTime = currentTime;
-    
+
     handleButton(x, y, BTN1_X, BTN1_Y, BTN_W, BTN_H, Switch1, servo1ActivationTime, 1);
     handleButton(x, y, BTN2_X, BTN2_Y, BTN_W, BTN_H, Switch2, servo2ActivationTime, 2);
     handleButton(x, y, BTN3_X, BTN3_Y, BTN_W, BTN_H, Switch3, servo3ActivationTime, 3);

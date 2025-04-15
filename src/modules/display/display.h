@@ -7,6 +7,7 @@
 
 // Function declarations
 void initDisplay();
+void touch_calibrate();
 void screenTransition();
 void drawButton(int x, int y, bool state, const char *label);
 void displayStatus();

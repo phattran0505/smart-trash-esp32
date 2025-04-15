@@ -2,16 +2,17 @@
 #include "../config/config.h"
 #include "../smart_trash_pin/smart_trash_pin.h"
 #include "../display/display.h"
+#include "../blynk_control/blynk_control.h"
 
 void initServos() {
   servo1.attach(SERVO1_PIN);
   servo2.attach(SERVO2_PIN);
   servo3.attach(SERVO3_PIN);
 
-  // // Set initial positions
-  // servo1.write(0);
-  // servo2.write(0);
-  // servo3.write(0);
+  // Set initial positions
+  servo1.write(0);
+  servo2.write(0);
+  servo3.write(0);
 }
 
 // Hàm xử lý servo chung
@@ -23,15 +24,25 @@ void handleServo(bool &switchState, unsigned long &activationTime, Servo &servo,
     switchState = false;
     servo.write(0); // Move servo back to 0 position
     activationTime = 0;
+    
+    // Update interface
     updateButton(buttonIndex, switchState);
+    
+    // Update Blynk UI
+    updateBlynkStatus();
+    
+    Serial.printf("Servo %d: Auto-OFF after 5s\n", buttonIndex);
   }
 }
 
 // Hàm xử lý nút nhấn chung
+// Hàm xử lý nút nhấn chung
 void handleButton(int x, int y, int btnX, int btnY, int btnW, int btnH, 
                  bool &switchState, unsigned long &activationTime, 
                  int buttonIndex) {
+
   if (x > btnX && x < btnX + btnW && y > btnY && y < btnY + btnH) {
+    Serial.printf("Button %d pressed!\n", buttonIndex);
     switchState = !switchState;
     
     // Get the correct servo based on buttonIndex
@@ -53,12 +64,18 @@ void handleButton(int x, int y, int btnX, int btnY, int btnW, int btnH,
     if (switchState) {
       currentServo->write(90);  // Move servo to ON position
       activationTime = millis();  // Start tracking activation time
+      Serial.printf("Touch: Servo %d ON\n", buttonIndex);
     } else {
       currentServo->write(0);   // Move servo to OFF position
       activationTime = 0;
+      Serial.printf("Touch: Servo %d OFF\n", buttonIndex);
     }
     
+    // Update interface
     updateButton(buttonIndex, switchState);
+    
+    // Update Blynk UI
+    updateBlynkStatus();
   }
 }
 
