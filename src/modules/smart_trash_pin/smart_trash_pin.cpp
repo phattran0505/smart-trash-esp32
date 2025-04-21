@@ -4,6 +4,7 @@
 #include "../servo_control/servo_control.h"
 #include "../connectivity/connectivity.h"
 #include "../blynk_control/blynk_control.h"
+#include "../ultrasonic/ultrasonic.h"
 
 // Initialize components
 TFT_eSPI tft = TFT_eSPI();
@@ -27,9 +28,9 @@ unsigned long lastTouchDebug = 0;
 // Last update times for various operations
 unsigned long lastReconnectAttempt = 0;
 
-void smartTrashInit()
+void smartTrashInit() 
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.println("Starting Smart Trash System...");
 
   // Initialize display
@@ -50,6 +51,10 @@ void smartTrashInit()
   // Initialize servos
   Serial.println("Initializing servos...");
   initServos();
+
+  // Initialize ultrasonic sensors
+  Serial.println("Initializing ultrasonic sensors...");
+  initUltrasonic();
 
   // Always draw the main interface
   refreshScreen();
@@ -73,6 +78,15 @@ void smartTrashUpdate()
   // Update servo positions
   updateServos();
 
+  // Update ultrasonic sensors
+  updateUltrasonic();
+
+  // Chỉ cập nhật màn hình khi cần thiết
+  if (needDisplayUpdate) {
+    displayStatus();
+    needDisplayUpdate = false; // Reset the flag
+  }
+
   // Handle touch input
   uint16_t x, y;
   if (tft.getTouch(&x, &y))
@@ -84,8 +98,12 @@ void smartTrashUpdate()
     
     lastButtonPressTime = currentTime;
 
+    // Set the flag to update display when a button is pressed
+    needDisplayUpdate = true;
+    
     handleButton(x, y, BTN1_X, BTN1_Y, BTN_W, BTN_H, Switch1, servo1ActivationTime, 1);
     handleButton(x, y, BTN2_X, BTN2_Y, BTN_W, BTN_H, Switch2, servo2ActivationTime, 2);
     handleButton(x, y, BTN3_X, BTN3_Y, BTN_W, BTN_H, Switch3, servo3ActivationTime, 3);
   }
 }
+

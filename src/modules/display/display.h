@@ -15,5 +15,6 @@ void updateButton(int buttonIndex, bool state);
 void updateConnectionStatus();
 void refreshScreen();
 void showConnectingMessage();
+void displayTrashStatus();
 
 #endif // DISPLAY_H 

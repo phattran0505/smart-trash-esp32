@@ -1,26 +1,88 @@
-// Define Blynk settings before including BlynkSimpleEsp32.h
-#define BLYNK_PRINT Serial
-#define BLYNK_TEMPLATE_ID "TMPL6myBfv59F"
-#define BLYNK_TEMPLATE_NAME "smart trash pin"
-#define BLYNK_AUTH_TOKEN "sjJmhHtVmAkNZiv1NNnEGXULecOTq-5T"
 
 #include "blynk_control.h" 
+#include "../config/config.h"
 #include "../smart_trash_pin/smart_trash_pin.h"
 #include "../servo_control/servo_control.h"
+#include "../ultrasonic/ultrasonic.h"
 #include "../display/display.h"
 #include <BlynkSimpleEsp32.h>
+
+// Biến theo dõi trạng thái đã thông báo để tránh gửi thông báo liên tục
+bool bin1NotificationSent = false;
+bool bin2NotificationSent = false;
+bool bin3NotificationSent = false;
 
 // Initialize Blynk
 void initBlynk() {
   Serial.println("Initializing Blynk...");
   Blynk.begin(BLYNK_AUTH_TOKEN, ssid, password);
   Serial.println("Blynk initialized");
+  
+  // Đặt lại trạng thái thông báo khi khởi động
+  bin1NotificationSent = false;
+  bin2NotificationSent = false;
+  bin3NotificationSent = false;
 }
 
 // Update Blynk status
 void updateBlynk() {
   Blynk.run();
+  
+  // Kiểm tra và gửi thông báo về tình trạng rác đầy
+  // checkAndNotifyTrashStatus(bin1Full, bin2Full, bin3Full);
 }
+
+// Kiểm tra và gửi thông báo khi thùng rác đầy
+// void checkAndNotifyTrashStatus(bool bin1Full, bool bin2Full, bool bin3Full) {
+//   // Thùng 1
+//   if (bin1Full && !bin1NotificationSent) {
+//     sendTrashFullNotification(1);
+//     bin1NotificationSent = true;
+//   } else if (!bin1Full && bin1NotificationSent) {
+//     bin1NotificationSent = false; // Đặt lại cờ nếu thùng không còn đầy
+//   }
+  
+//   // Thùng 2
+//   if (bin2Full && !bin2NotificationSent) {
+//     sendTrashFullNotification(2);
+//     bin2NotificationSent = true;
+//   } else if (!bin2Full && bin2NotificationSent) {
+//     bin2NotificationSent = false; // Đặt lại cờ nếu thùng không còn đầy
+//   }
+  
+//   // Thùng 3
+//   if (bin3Full && !bin3NotificationSent) {
+//     sendTrashFullNotification(3);
+//     bin3NotificationSent = true;
+//   } else if (!bin3Full && bin3NotificationSent) {
+//     bin3NotificationSent = false; // Đặt lại cờ nếu thùng không còn đầy
+//   }
+// }
+
+// Gửi thông báo qua Blynk LogEvent
+// void sendTrashFullNotification(int binNumber) {
+//   char eventMessage[64];
+  
+//   // Tạo thông điệp với thông tin chi tiết
+//   sprintf(eventMessage, "Thùng rác %d đã đầy! Cần đổ rác.", binNumber);
+  
+//   // Ghi log và gửi email thông qua Blynk LogEvent
+//   switch (binNumber) {
+//     case 1:
+//       Blynk.logEvent(EVENT_BIN1_FULL, eventMessage);
+//       break;
+//     case 2:
+//       Blynk.logEvent(EVENT_BIN2_FULL, eventMessage);
+//       break;
+//     case 3:
+//       Blynk.logEvent(EVENT_BIN3_FULL, eventMessage);
+//       break;
+//   }
+  
+//   // In thông báo ra Serial để debug
+//   Serial.print("Email notification sent: ");
+//   Serial.println(eventMessage);
+// }
 
 // Update Blynk UI with current servo status
 void updateBlynkStatus() {

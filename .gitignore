@@ -3,3 +3,6 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+
+src/modules/config/config.h
+src/modules/config/config.cpp

@@ -38,9 +38,14 @@ void initConnectivity() {
     tft.setTextDatum(MC_DATUM);
     tft.drawString("Ket noi WiFi thanh cong!", tft.width()/2, tft.height()/2);
     
-    // Show IP information
+    // Show IP information - replace SSID info at the same position
+    tft.fillRect(0, tft.height()/2 + 20, tft.width(), 30, TFT_BLACK); // Clear the SSID area
     tft.setTextColor(TFT_WHITE);
-    tft.drawString("IP: " + WiFi.localIP().toString(), tft.width()/2, tft.height()/2 + 30);
+    tft.setTextSize(1); // Larger font for better readability
+    tft.setTextDatum(MC_DATUM); // Center alignment
+    
+    String ipStr = WiFi.localIP().toString();
+    tft.drawString("IP: " + ipStr, tft.width()/2, tft.height()/2 + 30); // Same position as SSID was
     
     Serial.println("\nWiFi Connected!");
     Serial.print("IP Address: ");
