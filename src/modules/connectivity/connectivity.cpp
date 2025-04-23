@@ -110,17 +110,17 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
       // Kiểm tra class và điều khiển servo tương ứng
       if (className == "plastic") {
         Switch1 = true;
-        servo1.write(90);
+        servo1.write(180);
         servo1ActivationTime = millis();
         updateButton(1, Switch1);
       } else if (className == "glass") {
         Switch2 = true;
-        servo2.write(90);
+        servo2.write(180);
         servo2ActivationTime = millis();
         updateButton(2, Switch2);
       } else if (className == "common") {
         Switch3 = true;
-        servo3.write(90);
+        servo3.write(180);
         servo3ActivationTime = millis();
         updateButton(3, Switch3);
       }

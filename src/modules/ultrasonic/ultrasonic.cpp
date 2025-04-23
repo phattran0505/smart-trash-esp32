@@ -50,8 +50,6 @@ float getDistance(int trigPin, int echoPin) {
   // Đọc phản hồi ECHO (có timeout)
   long duration = pulseIn(echoPin, HIGH, 30000); // 30ms timeout ~ 5m max
   
-  // Xóa thông tin debug về xung đo
-  
   if (duration == 0) {
     // Không nhận được phản hồi, trả về giá trị lớn
     return BIN_HEIGHT + 10.0;
@@ -70,6 +68,13 @@ float getDistance(int trigPin, int echoPin) {
   if (distance > BIN_HEIGHT + 5.0) {
     distance = BIN_HEIGHT + 5.0;
   }
+  
+  // In ra khoảng cách đo được
+  Serial.print("Distance (pin ");
+  Serial.print(trigPin);
+  Serial.print("): ");
+  Serial.print(distance);
+  Serial.println(" cm");
   
   return distance;
 }
@@ -139,6 +144,27 @@ void updateUltrasonic() {
   bin1Full = isTrashFull(1);
   bin2Full = isTrashFull(2);
   bin3Full = isTrashFull(3);
+  
+  // In thông tin tóm tắt về trạng thái các thùng rác
+  Serial.println("\n----- TRASH BIN STATUS -----");
+  Serial.print("Bin 1: Distance = ");
+  Serial.print(distance1);
+  Serial.print(" cm, Level = ");
+  Serial.print(bin1Level);
+  Serial.println(bin1Full ? "% - CẢNH BÁO: THÙNG RÁC ĐẦY!" : "%");
+  
+  Serial.print("Bin 2: Distance = ");
+  Serial.print(distance2);
+  Serial.print(" cm, Level = ");
+  Serial.print(bin2Level);
+  Serial.println(bin2Full ? "% - CẢNH BÁO: THÙNG RÁC ĐẦY!" : "%");
+  
+  Serial.print("Bin 3: Distance = ");
+  Serial.print(distance3);
+  Serial.print(" cm, Level = ");
+  Serial.print(bin3Level);
+  Serial.println(bin3Full ? "% - CẢNH BÁO: THÙNG RÁC ĐẦY!" : "%");
+  Serial.println("---------------------------");
   
   // Chỉ đặt cờ cập nhật khi có sự thay đổi trạng thái
   if (bin1Full != prevBin1Full || bin2Full != prevBin2Full || bin3Full != prevBin3Full) {

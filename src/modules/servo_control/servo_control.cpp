@@ -62,7 +62,7 @@ void handleButton(int x, int y, int btnX, int btnY, int btnW, int btnH,
     }
     
     if (switchState) {
-      currentServo->write(90);  // Move servo to ON position
+      currentServo->write(180);  // Move servo to ON position (changed from 90 to 180 degrees)
       activationTime = millis();  // Start tracking activation time
       Serial.printf("Touch: Servo %d ON\n", buttonIndex);
     } else {

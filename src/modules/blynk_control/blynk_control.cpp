@@ -1,4 +1,3 @@
-
 #include "blynk_control.h" 
 #include "../config/config.h"
 #include "../smart_trash_pin/smart_trash_pin.h"
@@ -11,6 +10,11 @@
 bool bin1NotificationSent = false;
 bool bin2NotificationSent = false;
 bool bin3NotificationSent = false;
+
+// Define Blynk Auth Token
+#ifndef BLYNK_AUTH_TOKEN
+#define BLYNK_AUTH_TOKEN "sjJmhHtVmAkNZiv1NNnEGXULecOTq-5T"
+#endif
 
 // Initialize Blynk
 void initBlynk() {
@@ -29,60 +33,53 @@ void updateBlynk() {
   Blynk.run();
   
   // Kiểm tra và gửi thông báo về tình trạng rác đầy
-  // checkAndNotifyTrashStatus(bin1Full, bin2Full, bin3Full);
+  checkAndNotifyTrashStatus(bin1Full, bin2Full, bin3Full);
 }
 
 // Kiểm tra và gửi thông báo khi thùng rác đầy
-// void checkAndNotifyTrashStatus(bool bin1Full, bool bin2Full, bool bin3Full) {
-//   // Thùng 1
-//   if (bin1Full && !bin1NotificationSent) {
-//     sendTrashFullNotification(1);
-//     bin1NotificationSent = true;
-//   } else if (!bin1Full && bin1NotificationSent) {
-//     bin1NotificationSent = false; // Đặt lại cờ nếu thùng không còn đầy
-//   }
+void checkAndNotifyTrashStatus(bool bin1Full, bool bin2Full, bool bin3Full) {
+  // Thùng 1
+  if (bin1Full && !bin1NotificationSent) {
+    sendTrashFullNotification(1);
+    bin1NotificationSent = true;
+    Serial.println("Cảnh báo: Thùng rác 1 đầy! Đã gửi email thông báo.");
+  } else if (!bin1Full && bin1NotificationSent) {
+    bin1NotificationSent = false; // Đặt lại cờ nếu thùng không còn đầy
+  }
   
-//   // Thùng 2
-//   if (bin2Full && !bin2NotificationSent) {
-//     sendTrashFullNotification(2);
-//     bin2NotificationSent = true;
-//   } else if (!bin2Full && bin2NotificationSent) {
-//     bin2NotificationSent = false; // Đặt lại cờ nếu thùng không còn đầy
-//   }
+  // Thùng 2
+  if (bin2Full && !bin2NotificationSent) {
+    sendTrashFullNotification(2);
+    bin2NotificationSent = true;
+    Serial.println("Cảnh báo: Thùng rác 2 đầy! Đã gửi email thông báo.");
+  } else if (!bin2Full && bin2NotificationSent) {
+    bin2NotificationSent = false; // Đặt lại cờ nếu thùng không còn đầy
+  }
   
-//   // Thùng 3
-//   if (bin3Full && !bin3NotificationSent) {
-//     sendTrashFullNotification(3);
-//     bin3NotificationSent = true;
-//   } else if (!bin3Full && bin3NotificationSent) {
-//     bin3NotificationSent = false; // Đặt lại cờ nếu thùng không còn đầy
-//   }
-// }
+  // Thùng 3
+  if (bin3Full && !bin3NotificationSent) {
+    sendTrashFullNotification(3);
+    bin3NotificationSent = true;
+    Serial.println("Cảnh báo: Thùng rác 3 đầy! Đã gửi email thông báo.");
+  } else if (!bin3Full && bin3NotificationSent) {
+    bin3NotificationSent = false; // Đặt lại cờ nếu thùng không còn đầy
+  }
+}
 
 // Gửi thông báo qua Blynk LogEvent
-// void sendTrashFullNotification(int binNumber) {
-//   char eventMessage[64];
+void sendTrashFullNotification(int binNumber) {
+  char eventMessage[64];
   
-//   // Tạo thông điệp với thông tin chi tiết
-//   sprintf(eventMessage, "Thùng rác %d đã đầy! Cần đổ rác.", binNumber);
+  // Tạo thông điệp với thông tin chi tiết
+  sprintf(eventMessage, "Thùng rác %d đã đầy!. Cần đổ rác.", binNumber);
   
-//   // Ghi log và gửi email thông qua Blynk LogEvent
-//   switch (binNumber) {
-//     case 1:
-//       Blynk.logEvent(EVENT_BIN1_FULL, eventMessage);
-//       break;
-//     case 2:
-//       Blynk.logEvent(EVENT_BIN2_FULL, eventMessage);
-//       break;
-//     case 3:
-//       Blynk.logEvent(EVENT_BIN3_FULL, eventMessage);
-//       break;
-//   }
+  // Ghi log và gửi email thông qua Blynk LogEvent
+  Blynk.logEvent(EVENT_BIN1_FULL, eventMessage);
   
-//   // In thông báo ra Serial để debug
-//   Serial.print("Email notification sent: ");
-//   Serial.println(eventMessage);
-// }
+  // In thông báo ra Serial để debug
+  Serial.print("Email notification sent: ");
+  Serial.println(eventMessage);
+}
 
 // Update Blynk UI with current servo status
 void updateBlynkStatus() {
@@ -96,7 +93,7 @@ void blynkWriteV1(int value) {
   if (value == 1) {
     // Turn on servo 1
     Switch1 = true;
-    servo1.write(90);
+    servo1.write(180);
     servo1ActivationTime = millis();
     updateButton(1, Switch1);
     Serial.println("Local code: Servo 1 ON (auto-off in 5s)");
@@ -114,7 +111,7 @@ void blynkWriteV2(int value) {
   if (value == 1) {
     // Turn on servo 2
     Switch2 = true;
-    servo2.write(90);
+    servo2.write(180);
     servo2ActivationTime = millis();
     updateButton(2, Switch2);
     Serial.println("Local code: Servo 2 ON (auto-off in 5s)");
@@ -132,7 +129,7 @@ void blynkWriteV3(int value) {
   if (value == 1) {
     // Turn on servo 3
     Switch3 = true;
-    servo3.write(90);
+    servo3.write(180);
     servo3ActivationTime = millis();
     updateButton(3, Switch3);
     Serial.println("Local code: Servo 3 ON (auto-off in 5s)");
@@ -153,7 +150,7 @@ BLYNK_WRITE(V1) {
   if (value == 1) {
     // Turn ON servo 1
     Switch1 = true;
-    servo1.write(90);
+    servo1.write(180);
     servo1ActivationTime = millis(); // Start activation timer
     Serial.println("Blynk: Servo 1 ON (auto-off in 5s)");
   } else {
@@ -175,7 +172,7 @@ BLYNK_WRITE(V2) {
   if (value == 1) {
     // Turn ON servo 2
     Switch2 = true;
-    servo2.write(90);
+    servo2.write(180);
     servo2ActivationTime = millis(); // Start activation timer
     Serial.println("Blynk: Servo 2 ON (auto-off in 5s)");
   } else {
@@ -197,7 +194,7 @@ BLYNK_WRITE(V3) {
   if (value == 1) {
     // Turn ON servo 3
     Switch3 = true;
-    servo3.write(90);
+    servo3.write(180);
     servo3ActivationTime = millis(); // Start activation timer
     Serial.println("Blynk: Servo 3 ON (auto-off in 5s)");
   } else {

@@ -4,17 +4,17 @@
 #include "../config/config.h"
 
 
-#define TRIG_PIN_1 32
-#define ECHO_PIN_1 33
+#define TRIG_PIN_1 27
+#define ECHO_PIN_1 26
 
 #define TRIG_PIN_2 25
-#define ECHO_PIN_2 26
+#define ECHO_PIN_2 33
 
-#define TRIG_PIN_3 27
-#define ECHO_PIN_3 14
+#define TRIG_PIN_3 32   
+#define ECHO_PIN_3 35
 
 #define BIN_HEIGHT 10.0       // Chiều cao thùng rác (cm)
-#define MIN_DISTANCE 5.0      // Khoảng cách xác định thùng rác đầy (cm) - khi khoảng cách <= 5cm thì thùng đầy
+#define MIN_DISTANCE 6.0      // Khoảng cách xác định thùng rác đầy (cm) - khi khoảng cách <= 6cm thì thùng đầy
 
 // Khai báo hàm
 void initUltrasonic();
