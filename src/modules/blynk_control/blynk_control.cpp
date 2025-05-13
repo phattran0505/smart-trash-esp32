@@ -13,7 +13,7 @@ bool bin3NotificationSent = false;
 
 // Define Blynk Auth Token
 #ifndef BLYNK_AUTH_TOKEN
-#define BLYNK_AUTH_TOKEN "sjJmhHtVmAkNZiv1NNnEGXULecOTq-5T"
+#define BLYNK_AUTH_TOKEN "YOUR_NEW_BLYNK_TOKEN_HERE"  // Replace this with your new token from Blynk.cloud
 #endif
 
 // Initialize Blynk

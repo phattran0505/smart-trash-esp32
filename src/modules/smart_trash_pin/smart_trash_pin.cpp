@@ -84,7 +84,7 @@ void smartTrashUpdate()
   // Chỉ cập nhật màn hình khi cần thiết
   if (needDisplayUpdate) {
     displayStatus();
-    needDisplayUpdate = false; // Reset the flag
+    // Flag will be reset in displayStatus function
   }
 
   // Handle touch input

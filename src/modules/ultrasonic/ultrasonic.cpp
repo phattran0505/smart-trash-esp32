@@ -30,11 +30,11 @@ void initUltrasonic() {
   pinMode(TRIG_PIN_1, OUTPUT);
   pinMode(ECHO_PIN_1, INPUT);
   
-//   pinMode(TRIG_PIN_2, OUTPUT);
-//   pinMode(ECHO_PIN_2, INPUT);
+  pinMode(TRIG_PIN_2, OUTPUT);
+  pinMode(ECHO_PIN_2, INPUT);
   
-//   pinMode(TRIG_PIN_3, OUTPUT);
-//   pinMode(ECHO_PIN_3, INPUT);
+  pinMode(TRIG_PIN_3, OUTPUT);
+  pinMode(ECHO_PIN_3, INPUT);
   
   Serial.println("Ultrasonic sensors initialized");
 }
@@ -140,6 +140,11 @@ void updateUltrasonic() {
   bool prevBin2Full = bin2Full;
   bool prevBin3Full = bin3Full;
   
+  // Lưu mức độ đầy trước đó để phát hiện thay đổi
+  float prevBin1Level = bin1Level;
+  float prevBin2Level = bin2Level;
+  float prevBin3Level = bin3Level;
+  
   // Kiểm tra mức độ đầy của từng thùng rác
   bin1Full = isTrashFull(1);
   bin2Full = isTrashFull(2);
@@ -166,8 +171,9 @@ void updateUltrasonic() {
   Serial.println(bin3Full ? "% - CẢNH BÁO: THÙNG RÁC ĐẦY!" : "%");
   Serial.println("---------------------------");
   
-  // Chỉ đặt cờ cập nhật khi có sự thay đổi trạng thái
-  if (bin1Full != prevBin1Full || bin2Full != prevBin2Full || bin3Full != prevBin3Full) {
+  // Đặt cờ cập nhật khi có sự thay đổi trạng thái hoặc mức độ đầy
+  if (bin1Full != prevBin1Full || bin2Full != prevBin2Full || bin3Full != prevBin3Full ||
+      abs(bin1Level - prevBin1Level) > 0.5 || abs(bin2Level - prevBin2Level) > 0.5 || abs(bin3Level - prevBin3Level) > 0.5) {
     needDisplayUpdate = true;
   }
 }

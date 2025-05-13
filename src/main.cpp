@@ -1,9 +1,11 @@
 #include "modules/smart_trash_pin/smart_trash_pin.h"
 
-void setup() {
+void setup()
+{
   smartTrashInit();
 }
 
-void loop() {
+void loop()
+{
   smartTrashUpdate();
-  }
+}

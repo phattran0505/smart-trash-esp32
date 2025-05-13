@@ -102,13 +102,14 @@ void displayStatus()
   int currentBin2Level = int(bin2Level);
   int currentBin3Level = int(bin3Level);
 
-  // Chỉ cập nhật khi có sự thay đổi
+  // Chỉ cập nhật khi có sự thay đổi hoặc khi cờ cập nhật được đặt
   bool needUpdate = (currentBin1Level != prevBin1Level) ||
                     (currentBin2Level != prevBin2Level) ||
                     (currentBin3Level != prevBin3Level) ||
                     (bin1Full != prevBin1Full) ||
                     (bin2Full != prevBin2Full) ||
-                    (bin3Full != prevBin3Full);
+                    (bin3Full != prevBin3Full) ||
+                    needDisplayUpdate;
 
   if (!needUpdate)
   {
@@ -168,6 +169,10 @@ void displayStatus()
     tft.setTextColor(TFT_WHITE);
   }
   tft.drawString(bin3Status, 160, 180);
+  
+  // Reset the update flag after display has been updated
+  extern bool needDisplayUpdate;
+  needDisplayUpdate = false;
 }
 
 // Hiển thị trạng thái mức rác trong thùng - khi có cảnh báo
